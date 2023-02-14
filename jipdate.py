@@ -380,6 +380,8 @@ def parse_status_file(jira, filename, issues):
         # initialize here to avoid unassigned variables and useless code complexity
         resolution_id = transition_id = None
         resolution = transition_summary = version_summary = ""
+        versions = version
+        old_version = ', '.join([fv.name for fv in issue.fields.fixVersions])
 
         if transition != "" and transition != str(issue.fields.status):
             # An optional 'resolution' attribute can be set when doing a transition
@@ -404,7 +406,7 @@ def parse_status_file(jira, filename, issues):
             else:
                 transition_summary = " %s => %s" % (issue.fields.status, transition)
        
-        if version:
+        if version and version != old_version:
             versions_list = []
             versions = [s.strip() for s in version.split(",")]
             for fv in jira.project_versions(issue.fields.project.key):
